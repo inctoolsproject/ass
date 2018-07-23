@@ -605,6 +605,11 @@ def puyBot(op):
                                   wait["selfbot"] = False
                                   puy.sendMessage(msg.to, "Rinda diberhentikan sementara")                            
                             
+                            if cmd == "rinda comeon":
+                                if msg._from in admin:
+                                    wait["selfbot"] = True
+                                    puy.sendMessage(msg.to, "Rinda aktif kembali")                            
+                            
                             if cmd == "#help":
                               if wait["selfbot"] == True:
                                 helpMessage = helpmessage()
@@ -615,14 +620,14 @@ def puyBot(op):
                             elif cmd == "rinda get token":
                                 sendMentionFooter(to, "「 GET TOKEN 」\n\n1) DESKTOPWIN\n2) WIN10\n3) DESKTOPMAC\n4) IOSPAD\n5) CHROME\n\nUsage : Rinda get token chrome\n@! - Selamat Mencoba.", [sender])
                                 
-                            elif cmd == "sp":
+                            elif cmd == "sp1":
                                 start = time.time()
                                 puy.sendMessage(to, "Counting...")
                                 speed = time.time() - start
                                 ping = speed * 1000
-                                puy.sendMessage(to, "The result is {} ms".format(str(speedtest(ping))))
+                                puy.sendMessage(to, "The result is {} ms".format(str(speed(ping))))
                                 
-                            elif cmd == "rinda .speed":
+                            elif cmd == "sp2":
                               if msg._from in Owner:
                                 start = time.time()
                                 puy.sendMessage(to, "...")
@@ -635,7 +640,8 @@ def puyBot(op):
                                 runtime = format_timespan(runtime)
                                 puy.sendMessage(to, "Rinda has been Active for {} puy".format(str(runtime)))                                
                                 
-                            elif cmd.startswith("rinda speed"):
+                            elif cmd.startswith("sp3"):
+                                Ownerz = "uac8e3eaf1eb2a55770bf10c3b2357c33"
                                 get_profile_time_start = time.time()
                                 get_profile = puy.getProfile()
                                 get_profile_time = time.time() - get_profile_time_start
@@ -643,10 +649,9 @@ def puyBot(op):
                                 get_group = puy.getGroupIdsJoined()
                                 get_group_time = time.time() - get_group_time_start
                                 get_contact_time_start = time.time()
-                                #get_contact = puy.getContact(clientMid)
+                                get_contact = puy.getContact(Ownerz)
                                 get_contact_time = time.time() - get_contact_time_start
-                                #puy.sendMessage("u3b07c57b6239e5216aa4c7a02687c86d", '.')
-                                puy.sendMessage(to, "%.6f" % (get_group_time/3))                                
+                                puy.sendMessage(msg.to, "About Group speed is <%.10f>\nAbout Info Profile speed is <%.10f>\nAbout Contact speed is <%.10f>" % (get_profile_time/3,get_contact_time/3,get_group_time/3))
                                 
                             elif cmd == "rinda update":
                               if sender in Owner:
@@ -705,21 +710,12 @@ def puyBot(op):
                                 userid = "https://line.me/ti/p/~" + puy.profile.userid
                                 sendMention(to, "@!", [sender])
                                 #puy.sendContact(to, sender)
-                                #puy.sendImageWithURL(to,"http://dl.profile.line-cdn.net/{}".format(contact.pictureStatus))
-                                puy.sendMusic(to, puy.getContact(sender).displayName, "http://dl.profile.line-cdn.net/"+puy.getContact(sender).pictureStatus, str(userid), "Khie Bot", puy.getContact(sender).displayName)
+                                puy.sendImageWithURL(to,"http://dl.profile.line-cdn.net/{}".format(contact.pictureStatus))
                                 
                             elif cmd == "rinda check errorlog":
                                 with open('logError.txt', 'r') as er:
                                         error = er.read()
-                                puy.sendMessage(to, str(error))                                          
-                                
-                            elif cmd == "change to self":
-                                mode = "25"
-                                puy.sendMessage(receiver, 'Has ben Changed to Self Mode')
-                            elif cmd == "change to public":
-                                mode = "26"
-                                puy.sendMessage(receiver, 'Has ben Changed to Public Mode')
-                                
+                                puy.sendMessage(to, str(error))
 
               ## LURKING ##                      
                             elif text.lower() == 'rinda get reader on':
@@ -818,48 +814,56 @@ def puyBot(op):
                                     #sendMention(to, "「 Getreader belum diaktifkan 」\n@!", [sender])
                                     puy.sendMessage(to, "「 Getreader belum diaktifkan 」\n\n" + readTime)
 
-                            elif text.lower() == 'rinda get reader':
-                                tz = pytz.timezone("Asia/Jakarta")
-                                timeNow = datetime.now(tz=tz)
-                                day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday","Friday", "Saturday"]
-                                hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"]
-                                bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"]
-                                hr = timeNow.strftime("%A")
-                                bln = timeNow.strftime("%m")
-                                for i in range(len(day)):
-                                    if hr == day[i]: hasil = hari[i]
-                                for k in range(0, len(bulan)):
-                                    if bln == str(k): bln = bulan[k-1]
-                                readTime = hasil + ", " + timeNow.strftime('%d') + " - " + bln + " - " + timeNow.strftime('%Y') + "\nJam : [ " + timeNow.strftime('%H:%M:%S') + " ]"
-                                if receiver in read['readPoint']:
-                                    if read["ROM"][receiver].items() == []:
-                                        puy.sendMessage(receiver,"   「 Daftar Pembaca 」\nNone")
+                            elif cmd == "rinda get readers":
+                              #if msg._from in admin:
+                                if msg.to in wait['readPoint']:
+                                    if wait['readPoint'][msg.to] != {}:
+                                        aa = []
+                                        for x in wait['readPoint'][msg.to]:
+                                            aa.append(x)
+                                        try:
+                                            arrData = ""
+                                            textx = "  [ {} Reader ]\n\n1. ".format(str(len(aa)))
+                                            arr = []
+                                            no = 1
+                                            b = 1
+                                            for i in aa:
+                                                b = b + 1
+                                                end = "\n"
+                                                mention = "@!\n"
+                                                slen = str(len(textx))
+                                                elen = str(len(textx) + len(mention) - 1)
+                                                arrData = {'S':slen, 'E':elen, 'M':i}
+                                                arr.append(arrData)
+                                                tz = pytz.timezone("Asia/Jakarta")
+                                                timeNow = datetime.now(tz=tz)
+                                                textx += mention
+                                                if no < len(aa):
+                                                    no += 1
+                                                    textx += str(b) + ". "
+                                                else:
+                                                    try:
+                                                        no = "[ {} ]".format(str(puy.getGroup(msg.to).name))
+                                                    except:
+                                                        no = "  "
+                                            msg.to = msg.to
+                                            msg.text = textx+"\nPada : "+ datetime.strftime(timeNow,'%Y-%m-%d')+"\n* "+ datetime.strftime(timeNow,'%H:%M:%S')+"* "
+                                            msg.contentMetadata = {'MENTION': str('{"MENTIONEES":' + json.dumps(arr) + '}')}
+                                            msg.contentType = 0
+                                            puy.sendMessage1(msg)
+                                        except:
+                                            pass
+                                        try:
+                                            del wait['readPoint'][msg.to]
+                                            del wait['readPoint'][msg.to]
+                                        except:
+                                            pass
+                                        wait['readPoint'][msg.to] = msg.id
+                                        wait['readPoint'][msg.to] = {}
                                     else:
-                                        chiya = []
-                                        for rom in read["ROM"][receiver].items():
-                                            chiya.append(rom[1])
-                                        cmem = puy.getContacts(chiya) 
-                                        zx = ""
-                                        zxc = ""
-                                        zx2 = []
-                                        xpesan = '「 Daftar Pembaca 」\n\n'
-                                    for x in range(len(cmem)):
-                                        xname = str(cmem[x].displayName)
-                                        pesan = ''
-                                        pesan2 = pesan+"@c\n"
-                                        xlen = str(len(zxc)+len(xpesan))
-                                        xlen2 = str(len(zxc)+len(pesan2)+len(xpesan)-1)
-                                        zx = {'S':xlen, 'E':xlen2, 'M':cmem[x].mid}
-                                        zx2.append(zx)
-                                        zxc += pesan2
-                                    text = xpesan+ zxc + "\n" + readTime
-                                    try:
-                                        puy.sendMessage(receiver, text, contentMetadata={'MENTION':str('{"MENTIONEES":'+json.dumps(zx2).replace(' ','')+'}')}, contentType=0)
-                                    except Exception as error:
-                                        print (error)
-                                    pass
+                                        puy.sendMessage(msg.to, "Tidak ada satupun")
                                 else:
-                                    puy.sendMessage(receiver,"*Belum diaktifkan\nKetik 「 Rinda get reader on 」 untuk mengaktifkan.")
+                                    puy.sendMessage(msg.to, "Getreader status is Unactived")
               ## LURKING ##
               
 ##SETTINGS MESSAGE##
